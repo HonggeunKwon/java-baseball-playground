@@ -13,23 +13,19 @@ public class Calculator {
         return scanner.nextLine();
     }
 
-    public String[] getNumbers(String input) {
-        return RegexUtils.split(input, RegexUtils.OPERATOR_REGEX);
-    }
+    public int calculate(String input) {
+        input = input.replaceAll(" ", "");
+        String[] numbers = getNumbers(input);
+        String[] operators = getOperators(input);
 
-    public String[] getOperators(String input) {
-        return RegexUtils.split(input, RegexUtils.NUMBER_REGEX);
-    }
-
-    public int calculate(String[] numbers, String[] operators) {
-        if (numbers.length - operators.length != 1) {
+        if (numbers.length != operators.length) {
             throw new RuntimeException("입력값이 유효하지 않습니다.");
         }
 
         try {
             int sum = Integer.parseInt(numbers[0]);
 
-            for (int i = 0; i < operators.length; i++) {
+            for (int i = 1; i < operators.length; i++) {
                 sum = calculate(sum, numbers[i], operators[i]);
             }
 
@@ -37,6 +33,14 @@ public class Calculator {
         } catch (NumberFormatException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private String[] getNumbers(String input) {
+        return RegexUtils.split(input, RegexUtils.OPERATOR_REGEX);
+    }
+
+    private String[] getOperators(String input) {
+        return RegexUtils.split(input, RegexUtils.NUMBER_REGEX);
     }
 
     private int calculate(int sum, String number, String operator) {
